@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bring_buddy,access,model_bring_your_buddy,bring_buddy_coordinator,1,1,1,1
+access_bring_attendance,access,model_bring_your_buddy_attendance,bring_buddy_coordinator,1,1,1,1
+access_bring_buddy_hr,access,model_bring_your_buddy,bring_your_buddy_hr,1,1,1,1
+access_bring_attendance_hr,access,model_bring_your_buddy_attendance,bring_your_buddy_hr,1,1,1,1

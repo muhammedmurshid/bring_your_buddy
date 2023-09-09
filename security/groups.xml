@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="bring_your_buddy_groups">
+            <field name="name">Bring Your Buddy</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="bring_your_buddy_hr" model="res.groups">
+            <field name="name">HR Manager</field>
+            <field name="category_id" ref="bring_your_buddy.bring_your_buddy_groups"/>
+        </record>
+        <record id="bring_buddy_coordinator" model="res.groups">
+            <field name="name">Coordinator</field>
+            <field name="category_id" ref="bring_your_buddy.bring_your_buddy_groups"/>
+        </record>
+
+    </data>
+</odoo>

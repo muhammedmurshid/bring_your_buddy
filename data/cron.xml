@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mail_activity_bring_your_buddy" model="mail.activity.type">
+            <field name="name">Bring Your Buddy Activity</field>
+            <field name="icon">fa-phone</field>
+            <field name="res_model_id" ref="bring_your_buddy.model_bring_your_buddy"/>
+            <field name="delay_count">10</field>
+        </record>
+        <record id="bring_your_buddy_cron" model="ir.cron">
+            <field name="name">Bring Your Buddy Cron</field>
+            <field name="model_id" ref="model_bring_your_buddy"/>
+            <field name="state">code</field>
+            <field name="code">model.activity_batch_coordinator_bring_buddy()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

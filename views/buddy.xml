@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="bring_your_buddy_logic" model="ir.ui.view">
+        <field name="name">Buddy</field>
+        <field name="model">bring.your.buddy</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Form">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_done" string="Done" type="object" class="oe_highlight" states="draft"/>
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+<!--                            <field name="name"/>-->
+                            <field name="marketing_staff_id"/>
+                            <field name="batch_id"/>
+                            <field name="batch_start_date" attrs="{'invisible': [('batch_id', '=', False)]}"/>
+                            <field name="batch_end_date" attrs="{'invisible': [('batch_id', '=', False)]}"/>
+                            <field name="remarks"/>
+                        </group>
+                        <group>
+
+                            <field name="buddy_photo" widget="image" style="width: 200px; height: 200px;"/>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Attendance" name="attendance">
+                            <field name="batch_students_ids" widget="one2many">
+                                <tree string="Attendance" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="day_attendance"/>
+                                    <field name="std_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="logic_project_tickets_tree" model="ir.ui.view">
+        <field name="name">Buddy's</field>
+        <field name="model">bring.your.buddy</field>
+        <field name="arch" type="xml">
+            <tree>
+
+<!--                <field name="name"/>-->
+                <field name="marketing_staff_id"/>
+                <field name="batch_id"/>
+                <field name="batch_start_date"/>
+                <field name="batch_end_date"/>
+                <field name="state"/>
+            </tree>
+
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="bring_buddy_logic_action">
+        <field name="name">Buddy</field>
+        <field name="res_model">bring.your.buddy</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Bring Your Buddy" id="menu_bring_buddy"
+              web_icon="bring_your_buddy/static/description/icon.png"
+              sequence="10"/>
+    <menuitem name="Bring Buddy" id="menu_buddy"
+              action="bring_buddy_logic_action"
+              parent="menu_bring_buddy"
+              sequence="1"/>
+</odoo>
