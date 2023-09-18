@@ -9,17 +9,17 @@ class BringBuddy(models.Model):
     _rec_name = 'name'
 
     # name = fields.Char(string='Name')
-    marketing_staff_id = fields.Many2one('hr.employee', string='Marketing Staff',
-                                         domain="[('department_id.name', '=', 'Marketing')]", required=True)
+    marketing_staff_id = fields.Many2many('hr.employee', string='Marketing Staff', required=True)
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
-    batch_start_date = fields.Date(string='Start Date', related='batch_id.from_date')
-    batch_end_date = fields.Date(string='End Date', related='batch_id.to_date')
+    batch_start_date = fields.Date(string='Batch Start Date', related='batch_id.from_date')
+    batch_end_date = fields.Date(string='Batch End Date', related='batch_id.to_date')
     state = fields.Selection([
         ('draft', 'Draft'), ('done', 'Done'),
     ], string='Status', default='draft')
     batch_students_ids = fields.One2many('bring.your.buddy.attendance', 'bring_ids', string='Students')
     buddy_photo = fields.Binary(string='Buddy Photo')
     remarks = fields.Text(string='Remarks', help='if any remarks')
+    date = fields.Date(string='Date', required=True)
 
     @api.onchange('batch_id')
     def _compute_batch_name(self):
@@ -36,19 +36,29 @@ class BringBuddy(models.Model):
         self.batch_students_ids = stud
 
     def action_done(self):
-        std = []
-        # students = self.env['logic.students'].search([])
-        # for student in self.batch_students_ids:
-        #     for att in students:
-        #         if att.id == student.std_id:
-        #             res_list = {
-        #                 'name': student.name,
-        #                 'attendance': student.day_attendance,
-        #             }
-        #             std.append((0, 0, res_list))
-        #             att.bring_buddy_attendance_ids = std
-        #
-        #     print(student.name)
+        students = []
+        student = self.env['logic.students'].search([('id', 'in', [stud.std_id for stud in self.batch_students_ids])])
+        for i in student:
+            for jk in self.batch_students_ids:
+                print(i.name, 'uiddisfh')
+                if i.id == jk.std_id:
+                    res_list_std = {
+                        'name': jk.name,
+                        'attendance': jk.day_attendance,
+                        'date': self.date,
+                        'stud_id': jk.std_id
+                    }
+                    students.append((0, 0, res_list_std))
+                    i.bring_buddy_attendance_ids = students
+                else:
+                    print('noo')
+                std = self.env['logic.students'].search([])
+                for jk in std:
+                    for jkm in jk.bring_buddy_attendance_ids:
+
+                        if jkm.stud_id != jk.id:
+                            jkm.unlink()
+
         batches_feedback = self.env['mail.activity'].search([('res_id', '=', self.batch_id.id), (
             'activity_type_id', '=', self.env.ref('bring_your_buddy.mail_activity_bring_your_buddy').id)])
         batches_feedback.action_feedback(feedback='Bring Your Buddy Done')
