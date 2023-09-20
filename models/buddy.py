@@ -20,6 +20,18 @@ class BringBuddy(models.Model):
     buddy_photo = fields.Binary(string='Buddy Photo')
     remarks = fields.Text(string='Remarks', help='if any remarks')
     date = fields.Date(string='Date', required=True)
+    branch = fields.Selection([('corporate_office', 'Corporate Office'), ('cochin_campus', 'Cochin Campus'),
+                               ('kottayam_campus', 'Kottayam Campus'), ('calicut_campus', 'Calicut Campus'),
+                               ('malappuram_campus', 'Malappuram Campus'), ('trivandrum_campus', 'Trivandrum Campus'),
+                               ('palakkad_campus', 'Palakkad Campus'), ('dubai_campus', 'Dubai Campus')],
+                              string='Branch')
+
+    @api.depends('batch_students_ids')
+    def _compute_child_count(self):
+        for record in self:
+            record.child_count = len(record.batch_students_ids)
+
+    child_count = fields.Integer(string='Attended Students', compute='_compute_child_count', store=True)
 
     @api.onchange('batch_id')
     def _compute_batch_name(self):

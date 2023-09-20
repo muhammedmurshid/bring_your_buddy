@@ -9,14 +9,14 @@
                 <header>
                     <field name="state" widget="statusbar"/>
                     <button name="action_done" string="Done" type="object" class="oe_highlight" states="draft"/>
-
                 </header>
                 <sheet>
                     <group>
                         <group>
-<!--                            <field name="name"/>-->
+                            <!--                            <field name="name"/>-->
                             <field name="marketing_staff_id" widget="many2many_tags" string="Staff's"/>
                             <field name="batch_id"/>
+                            <field name="branch"/>
                             <field name="batch_start_date" attrs="{'invisible': [('batch_id', '=', False)]}"/>
                             <field name="batch_end_date" attrs="{'invisible': [('batch_id', '=', False)]}"/>
                             <field name="remarks"/>
@@ -36,6 +36,9 @@
                                     <field name="std_id" invisible="1"/>
                                 </tree>
                             </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="child_count"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -54,8 +57,8 @@
         <field name="arch" type="xml">
             <tree>
 
-<!--                <field name="name"/>-->
-<!--                <field name="marketing_staff_id"/>-->
+                <!--                <field name="name"/>-->
+                <!--                <field name="marketing_staff_id"/>-->
                 <field name="batch_id"/>
                 <field name="batch_start_date"/>
                 <field name="batch_end_date"/>
