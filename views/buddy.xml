@@ -20,6 +20,7 @@
                             <field name="batch_start_date" attrs="{'invisible': [('batch_id', '=', False)]}"/>
                             <field name="batch_end_date" attrs="{'invisible': [('batch_id', '=', False)]}"/>
                             <field name="remarks"/>
+                            <field name="coordinator_id"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -62,7 +63,7 @@
                 <field name="batch_id"/>
                 <field name="batch_start_date"/>
                 <field name="batch_end_date"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"/>
             </tree>
 
         </field>

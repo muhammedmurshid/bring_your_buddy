@@ -15,7 +15,7 @@ class BringBuddy(models.Model):
     batch_end_date = fields.Date(string='Batch End Date', related='batch_id.to_date')
     state = fields.Selection([
         ('draft', 'Draft'), ('done', 'Done'),
-    ], string='Status', default='draft')
+    ], string='Status', default='draft', tracking=True)
     batch_students_ids = fields.One2many('bring.your.buddy.attendance', 'bring_ids', string='Students')
     buddy_photo = fields.Binary(string='Buddy Photo')
     remarks = fields.Text(string='Remarks', help='if any remarks')
@@ -25,6 +25,7 @@ class BringBuddy(models.Model):
                                ('malappuram_campus', 'Malappuram Campus'), ('trivandrum_campus', 'Trivandrum Campus'),
                                ('palakkad_campus', 'Palakkad Campus'), ('dubai_campus', 'Dubai Campus')],
                               string='Branch')
+    coordinator_id = fields.Many2one('res.users', string='Coordinator', default=lambda self: self.env.user, readonly=True)
 
     @api.depends('batch_students_ids')
     def _compute_child_count(self):

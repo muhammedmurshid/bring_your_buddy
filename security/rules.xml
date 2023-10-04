@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="bring_your_buddy_coordinator_rule" model="ir.rule">
+            <field name="name">Own Records</field>
+            <field ref="model_bring_your_buddy" name="model_id"/>
+            <field name="domain_force">[('coordinator_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('bring_your_buddy.bring_buddy_coordinator'))]"/>
+        </record>
+    </data>
+</odoo>
