@@ -11,6 +11,7 @@ class BringBuddy(models.Model):
     # name = fields.Char(string='Name')
     marketing_staff_id = fields.Many2many('hr.employee', string='Marketing Staff', required=True)
     batch_id = fields.Many2one('logic.base.batch', string='Batch', required=True)
+    course_id = fields.Many2one('logic.base.courses', related='batch_id.course_id', string='Course')
     batch_start_date = fields.Date(string='Batch Start Date', related='batch_id.from_date')
     batch_end_date = fields.Date(string='Batch End Date', related='batch_id.to_date')
     state = fields.Selection([
@@ -20,11 +21,7 @@ class BringBuddy(models.Model):
     buddy_photo = fields.Binary(string='Buddy Photo')
     remarks = fields.Text(string='Remarks', help='if any remarks')
     date = fields.Date(string='Date', required=True)
-    branch = fields.Selection([('corporate_office', 'Corporate Office'), ('cochin_campus', 'Cochin Campus'),
-                               ('kottayam_campus', 'Kottayam Campus'), ('calicut_campus', 'Calicut Campus'),
-                               ('malappuram_campus', 'Malappuram Campus'), ('trivandrum_campus', 'Trivandrum Campus'),
-                               ('palakkad_campus', 'Palakkad Campus'), ('dubai_campus', 'Dubai Campus')],
-                              string='Branch')
+    branch = fields.Many2one('logic.base.branches', related='batch_id.branch_id', string='Branch')
     coordinator_id = fields.Many2one('res.users', string='Coordinator', default=lambda self: self.env.user, readonly=True)
 
     @api.depends('batch_students_ids')
@@ -100,23 +97,24 @@ class BringBuddy(models.Model):
         print(current_date)
         activity_type = self.env.ref('bring_your_buddy.mail_activity_bring_your_buddy')
         for record in records:
-            date_14_days_later = record.from_date + timedelta(days=14)
-            if current_date == date_14_days_later:
-                if record.class_teacher_id:
-                    user_id = record.class_teacher_id.user_id.id
-                    record.activity_schedule('bring_your_buddy.mail_activity_bring_your_buddy', user_id=user_id,
-                                             note=f'{record.name} This Batch commenced two weeks ago from today.')
-                    print(date_14_days_later, 'day')
-                    print(record.name, 'its after 14 days')
-                    print(record.from_date, 'rec from date')
-                    # activity = self.env['mail.activity'].create({
-                    #     'activity_type_id': self.env.ref('bring_your_buddy.mail_activity_bring_your_buddy').id,
-                    #     'res_id': self.id,
-                    #     'res_model_id': self.env.ref('bring_your_buddy.model_bring_your_buddy').id,  # Replace with your model's ID
-                    #     'user_id': user_id,
-                    #     # 'date_deadline': fields.Date.today(),  # Set the due date of the activity (you can change this)
-                    #     'note': f"{record.name} + This Batch commenced two weeks ago from today. ",  # Add any notes or description for the activity
-                    # })
-                    # return True
+            if record.from_date:
+                date_14_days_later = record.from_date + timedelta(days=14)
+                if current_date == date_14_days_later:
+                    if record.class_teacher_id:
+                        user_id = record.class_teacher_id.user_id.id
+                        record.activity_schedule('bring_your_buddy.mail_activity_bring_your_buddy', user_id=user_id,
+                                                 note=f'{record.name} This Batch commenced two weeks ago from today.')
+                        print(date_14_days_later, 'day')
+                        print(record.name, 'its after 14 days')
+                        print(record.from_date, 'rec from date')
+                        # activity = self.env['mail.activity'].create({
+                        #     'activity_type_id': self.env.ref('bring_your_buddy.mail_activity_bring_your_buddy').id,
+                        #     'res_id': self.id,
+                        #     'res_model_id': self.env.ref('bring_your_buddy.model_bring_your_buddy').id,  # Replace with your model's ID
+                        #     'user_id': user_id,
+                        #     # 'date_deadline': fields.Date.today(),  # Set the due date of the activity (you can change this)
+                        #     'note': f"{record.name} + This Batch commenced two weeks ago from today. ",  # Add any notes or description for the activity
+                        # })
+                        # return True
             else:
                 print(record.name, 'rec not 14 days')
